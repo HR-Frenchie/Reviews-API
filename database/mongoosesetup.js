@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
-const csv = require('csv-parser')
-const fs = require('fs')
+const { parse } = require("csv-parse");
+const readline = require('readline');
+const fs = require('fs');
 
 mongoose.connect('mongodb://127.0.0.1:27017/reviews')
   .then(() => console.log('Connected!'));
 
 const reviewPhotoSchema = new mongoose.Schema({
-  photo_id: {type: Number, unique: true},
+  id: {type: Number, unique: true},
   review_id: Number,
   url: String
 });
 
 const reviewSchema = new mongoose.Schema({
-  review_id: {type: Number, unique: true},
+  id: {type: Number, unique: true},
 	product_id: Number,
   reported: {type: Boolean, default: false},
   rating: Number,
@@ -24,41 +25,35 @@ const reviewSchema = new mongoose.Schema({
   reviewer_email: String,
   recommended: Boolean,
   helpfulness: Number,
-  photos: [reviewPhotoSchema],
+  // photos: {type: [reviewPhotoSchema], sparse: true},
 });
 
 const characteristicReviewSchema = new mongoose.Schema({
-  char_review_id: {type: Number, unique: true},
+  id: {type: Number, unique: true},
   characteristic_id: Number,
   review_id: Number,
   value: Number
 });
 
 const characteristicSchema = new mongoose.Schema({
-  char_id: {type: Number, unique: true},
+  id: {type: Number, unique: true},
   product_id: Number,
   name: String,
-  characteristic_reviews: [characteristicReviewSchema]
+  // characteristic_reviews: {type: [characteristicReviewSchema], sparse: true}
 });
 
 const Review = mongoose.model('Review', reviewSchema);
 const ReviewPhoto = mongoose.model('ReviewPhoto', reviewPhotoSchema);
+const CharacteristicReview = mongoose.model('CharacteristicReview', characteristicReviewSchema);
+const Characteristic = mongoose.model('Characteristic', characteristicSchema);
 
 let reviewPath = "/Users/danielleebron/Documents/Hack Reactor/Week8/APIcsvs/reviews.csv";
 let photoPath = "/Users/danielleebron/Documents/Hack Reactor/Week8/APIcsvs/reviews_photos.csv";
 
+// mongoimport --db=reviews --collection=reviews --type=csv --headerline --file=/Users/danielleebron/Documents/Hack\ Reactor/Week8/APIcsvs/reviews.csv
 
-// fs.createReadStream(photoPath)
-//   .pipe(csv())
-//   .on('data', (data) => {
-//     const item = {
-//       photo_id: data.id,
-//       review_id: data.review_id,
-//       url: data.url
-//     }
-//     const row = new ReviewPhoto(item);
-//     row.save();
-//   })
-//   .on('end', () => {
-//     console.log('Done importing photos.csv');
-//   });
+// mongoimport --db=reviews --collection=reviewphotos --type=csv --headerline --file=/Users/danielleebron/Documents/Hack\ Reactor/Week8/APIcsvs/reviews_photos.csv
+
+// mongoimport --db=reviews --collection=characteristicreviews --type=csv --headerline --file=/Users/danielleebron/Documents/Hack\ Reactor/Week8/APIcsvs/characteristic_reviews.csv
+
+// mongoimport --db=reviews --collection=characteristics --type=csv --headerline --file=/Users/danielleebron/Documents/Hack\ Reactor/Week8/APIcsvs/characteristics.csv
