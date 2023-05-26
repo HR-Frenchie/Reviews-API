@@ -4,6 +4,7 @@
   "description": "backend for reviews service",
   "main": "index.js",
   "scripts": {
+    "server-dev": "npx nodemon --watch server server/app.js",
     "test": "test"
   },
   "repository": {
@@ -17,8 +18,12 @@
   },
   "homepage": "https://github.com/Dan-Leebron/Reviews-API#readme",
   "dependencies": {
+    "csv-parse": "^5.3.10",
     "csv-parser": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "mongoose": "^7.2.0",
+    "nodemon": "^2.0.22",
     "pg": "^8.11.0"
   }
 }
