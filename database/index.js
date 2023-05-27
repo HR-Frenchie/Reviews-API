@@ -12,16 +12,9 @@ const pool = new Pool({
 pool.connect((err) => {
   if (err) {
     return console.error('Error acquiring client', err.stack)
-  }
+  } else {
     console.log('Connected to DB');
+  }
 })
 
-pool
-  .query('SELECT * from characteristics LIMIT 5;')
-  .then((result) => console.log(result.rows))
-  .catch((e) => console.error(e.stack))
-  .then(() => pool.end())
-
-  module.exports = {
-    query: (text, params) => pool.query(text, params),
-  }
+  module.exports.pool = pool;
