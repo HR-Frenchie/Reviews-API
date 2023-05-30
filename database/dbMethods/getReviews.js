@@ -26,10 +26,10 @@ async function getReviews (data) {
   }
 
   const query = {
-    text: `SELECT reviews.review_id, rating, summary, recommend, response, body, date, reviewer_name, helpfulness, json_agg(json_build_object(
+    text: `SELECT reviews.review_id, rating, summary, recommend, response, body, date, reviewer_name, helpfulness, coalesce(json_agg(json_build_object(
       'id', reviews_photos.id,
-      'url', url)) AS photos
-      FROM reviews LEFT JOIN reviews_photos on reviews.review_id = reviews_photos.review_id
+      'url', url)), '[]') AS photos
+      FROM reviews INNER JOIN reviews_photos on reviews.review_id = reviews_photos.review_id
       WHERE product_id = $1 AND reported = false GROUP BY reviews.review_id
       ORDER BY ${sort} LIMIT $2 OFFSET $3;`,
     values: [product_id, count, offsetIndex],
@@ -40,6 +40,7 @@ async function getReviews (data) {
     return res.rows;
   } catch (err) {
     console.log(err.stack)
+    return err;
   }
 
 }
