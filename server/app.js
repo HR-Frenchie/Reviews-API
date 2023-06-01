@@ -13,10 +13,7 @@ app.use(express.json());
 
 app.get('/reviews', async (req, res) => {
   //20 - 27 ms
-  var startTime = performance.now();
   let reviewList = await getReviews.getReviews(req.query);
-  var endTime = performance.now();
-  console.log(`Call to get reviews took ${endTime - startTime} milliseconds`);
 
   reviewList.forEach((item) => {
     let msTime = Number(item.date);
@@ -39,10 +36,7 @@ app.get('/reviews', async (req, res) => {
 
 app.get('/reviews/meta', async (req, res) => {
   //47 - 14 ms
-  // var startTime = performance.now();
   let metadata = await getMetadata.getMetadata(req.query.product_id);
-  // var endTime = performance.now();
-  // console.log(`Call to get meta took ${endTime - startTime} milliseconds`);
   let characteristics = {};
 
   metadata[1].forEach((characteristic) => {
@@ -75,10 +69,7 @@ app.get('/reviews/meta', async (req, res) => {
 app.post('/reviews', (req, res) => {
   //Add review to db
   //3.8089579939842224 ms
-  // var startTime = performance.now();
   insertReview.insertReview(req.body);
-  // var endTime = performance.now();
-  // console.log(`Call to insert review took ${endTime - startTime} milliseconds`);
 
   res.status(201).send(`Created review for product ${req.body.product_id}!`)
 })
@@ -105,10 +96,7 @@ app.put('/reviews/:review_id/report', (req, res) => {
   //"An error occurred. If this error persists, contact your instruction team."
   try {
     //3-5 ms
-    // var startTime = performance.now();
     reportReview.reportReview(req.params.review_id)
-    // var endTime = performance.now();
-    // console.log(`Call to report review took ${endTime - startTime} milliseconds`);
     res.sendStatus(204);
   } catch (err) {
     res.status(500).send(err);
