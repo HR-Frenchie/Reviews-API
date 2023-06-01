@@ -5,6 +5,7 @@ const pool = new Pool({
   host: process.env.PGHOST || 'localhost',
   user: process.env.PGUSER,
   database: process.env.PGDATABASE || 'reviews',
+  password: process.env.PGPASSWORD,
   port: process.env.PGPORT || 5432,
 });
 
