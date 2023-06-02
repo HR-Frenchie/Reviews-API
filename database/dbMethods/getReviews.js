@@ -25,13 +25,31 @@ async function getReviews (data) {
       sort = 'helpfulness DESC';
   }
 
+  // SELECT reviews.review_id, rating, summary, recommend, response, body, date, reviewer_name, helpfulness, coalesce(json_agg(json_build_object(
+  //   'id', reviews_photos.id,
+  //   'url', url)), '[]') AS photos
+  //   FROM reviews INNER JOIN reviews_photos on reviews.review_id = reviews_photos.review_id
+  //   WHERE product_id = $1 AND reported = false GROUP BY reviews.review_id
+  //   ORDER BY ${sort} LIMIT $2 OFFSET $3;
+
   const query = {
-    text: `SELECT reviews.review_id, rating, summary, recommend, response, body, date, reviewer_name, helpfulness, coalesce(json_agg(json_build_object(
-      'id', reviews_photos.id,
-      'url', url)), '[]') AS photos
-      FROM reviews INNER JOIN reviews_photos on reviews.review_id = reviews_photos.review_id
-      WHERE product_id = $1 AND reported = false GROUP BY reviews.review_id
-      ORDER BY ${sort} LIMIT $2 OFFSET $3;`,
+    text: `SELECT reviews.review_id, rating, summary, recommend, response, body, date, reviewer_name, helpfulness,  COALESCE(
+      (
+        SELECT json_agg(
+          json_build_object(
+            'id', reviews_photos.id,
+            'url', reviews_photos.url
+          )
+        )
+        FROM reviews_photos
+        WHERE reviews_photos.review_id = reviews.review_id
+      ),
+      '[]')
+     AS photos
+        FROM reviews
+        WHERE product_id = $1 AND reported = false GROUP BY reviews.review_id
+        ORDER BY ${sort} LIMIT $2 OFFSET $3;
+  `,
     values: [product_id, count, offsetIndex],
   }
 
