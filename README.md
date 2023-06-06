@@ -6,7 +6,7 @@ The initial implementation and optimizations of the backend led to the back end 
 
 After changing the query used by the get request, the server was able to support a maximum of between 1200 - 1300 queries per second, though there would be an initial spike of latency up to 180ms before settling back to 5ms but still an error rate of 0%. This increase in speed was made possible by replacing an inefficient join with a subquery that minimized the data needed and better accounted for edge cases in the data.
 
-![subsequent latency](./images/example2png)
+![subsequent latency](./images/example2.png)
 
 The maximum number of queries tolerated per second by the server was increased further by deploying the server on AWS EC2 instances and using a load balancer to accommodate increased activity among multiple servers. When using just 2 servers and a load balancer, the new maximum requests per second the application could handle was 2400 queries per second and a stable average latency of 180ms.
 
