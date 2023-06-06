@@ -7,6 +7,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE || 'reviews',
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT || 5432,
+  max: 16,
 });
 
 pool.connect((err) => {
