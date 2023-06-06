@@ -5,7 +5,7 @@ async function getReviews (data) {
 
   let product_id = Number(data.product_id);
   let count = Number(data.count) || 5;
-  let page = Number(data.page);
+  let page = Number(data.page) || 1;
 
   if (page < 1) {
     page = 1;
